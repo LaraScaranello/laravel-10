@@ -10,7 +10,7 @@ use App\Http\Requests\StoreUpdateSupportRequest;
 use App\Http\Resources\SupportResource;
 use App\Services\SupportService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Http\Response;
 
 class SupportController extends Controller
 {
@@ -42,7 +42,9 @@ class SupportController extends Controller
             CreateSupportDTO::makeFromRequest($request)
         );
 
-        return new SupportResource($support);
+        return (new SupportResource($support))
+                ->response()
+                ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
@@ -53,7 +55,7 @@ class SupportController extends Controller
         if (!$support = $this->service->findOne($id)) {
             return response()->json([
                 'error' => 'Not Found',
-            ], HttpResponse::HTTP_NOT_FOUND);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         return new SupportResource($support);
@@ -69,7 +71,7 @@ class SupportController extends Controller
         if (!$support) {
             return response()->json([
                 'error' => 'Not Found',
-            ], HttpResponse::HTTP_NOT_FOUND);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         return new SupportResource($support);
@@ -83,11 +85,11 @@ class SupportController extends Controller
         if (!$this->service->findOne($id)) {
             return response()->json([
                 'error' => 'Not Found',
-            ], HttpResponse::HTTP_NOT_FOUND);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $this->service->delete($id);
 
-        return response()->json([], HttpResponse::HTTP_NO_CONTENT);
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 }

@@ -23,8 +23,8 @@ return new class extends Migration
                   ->on('users');
 
             $table->foreign('support_id')
-            ->references('id')
-            ->on('supports');
+                    ->references('id')
+                    ->on('supports');
 
         });
     }
